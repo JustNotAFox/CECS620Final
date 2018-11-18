@@ -20,6 +20,7 @@ def initGamestate():
 	ret["mana"] = 0
 	ret["storm"] = 0
 	ret["life"] = 20
+	ret["health"] = 20
 	ret["hand"] = 7
 	ret["land"] = 1
 	ret["grave"] = 0
@@ -65,6 +66,7 @@ def fitness(deck, gamestate):
 			if tmpGamestate["r"] > tmpGamestate["mana"]:
 				tmpGamestate["r"] = tmpGamestate["mana"]
 			tmpGamestate["grave"] += 1
+			tmpGamestate["health"] += 2
 			print("Starting tendrils" + str(tmpGamestate["hand"]))
 			inter["tendrils"] = fitness(tmpDeck,tmpGamestate)
 
@@ -137,31 +139,33 @@ def fitness(deck, gamestate):
 		print("Starting chromatic star" + str(tmpGamestate["hand"]))
 		inter["star"] = fitness(tmpDeck,tmpGamestate)
 
-	if deck["probe"]:
+	if deck["probe"] and tmpGamestate["health"] >= 3:
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["probe"] -= 1
 		tmpGamestate["storm"] += 1
 		tmpGamestate["grave"] += 1
+		tmpGamestate["health"] -= 2
 		print("Starting gitaxian probe" + str(tmpGamestate["hand"]))
 		inter["probe"] = fitness(tmpDeck,tmpGamestate)
 
-	if deck["nightwhisper"] and gamestate["b"] and gamestate["mana"] >= 2:
+	if deck["nightwhisper"] and gamestate["b"] and gamestate["mana"] >= 2 and tmpGamestate["health"] >= 3:
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["nightwhisper"] -= 1
 		tmpGamestate["storm"] += 1
 		tmpGamestate["grave"] += 1
 		tmpGamestate["hand"] += 1
-		tmpGamestate["life"] -= 2
+		tmpGamestate["health"] -= 2
 		print("Starting night's whisper" + str(tmpGamestate["hand"]))
 		inter["nightwhisper"] = fitness(tmpDeck,tmpGamestate)
 
-	if deck["wraith"]:
+	if deck["wraith"] and tmpGamestate["health"] >= 3:
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["wraith"] -= 1
 		tmpGamestate["grave"] += 1
+		tmpGamestate["health"] -= 2
 		inter["wraith"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["cabalrit"] and gamestate["b"] and gamestate["mana"] >= 2:
