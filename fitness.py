@@ -285,6 +285,7 @@ def volc(deck,gamestate,inter):
 	tmpGamestate["r"] += 1
 	tmpGamestate["u"] += 1
 	tmpGamestate["mana"] += 1
+	tmpGamestate["land"] -= 1
 	inter["volc"] = fitness(tmpDeck,tmpGamestate)
 
 def badlands(deck,gamestate,inter):
@@ -295,6 +296,7 @@ def badlands(deck,gamestate,inter):
 	tmpGamestate["r"] += 1
 	tmpGamestate["b"] += 1
 	tmpGamestate["mana"] += 1
+	tmpGamestate["land"] -= 1
 	inter["badlands"] = fitness(tmpDeck,tmpGamestate)
 
 def usea(deck,gamestate,inter):
@@ -305,6 +307,7 @@ def usea(deck,gamestate,inter):
 	tmpGamestate["b"] += 1
 	tmpGamestate["u"] += 1
 	tmpGamestate["mana"] += 1
+	tmpGamestate["land"] -= 1
 	inter["usea"] = fitness(tmpDeck,tmpGamestate)
 
 def fitness(deck, gamestate):
