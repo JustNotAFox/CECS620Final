@@ -341,6 +341,15 @@ def fitness(deck, gamestate):
 	if gamestate["hand"] == 0 or gamestate["hand"] > c:
 		return 0
 
+	if deck["badlands"] and gamestate["land"]:
+		threads.append(threading.Thread(target=badlands,args=(deck,gamestate,inter)))
+
+	if deck["usea"] and gamestate["land"]:
+		threads.append(threading.Thread(target=usea,args=(deck,gamestate,inter)))
+
+	if deck["volc"] and gamestate["land"]:
+		threads.append(threading.Thread(target=volc,args=(deck,gamestate,inter)))
+
 	if deck["lotus"]:
 		threads.append(threading.Thread(target=lotus,args=(deck,gamestate,inter)))
 
@@ -385,6 +394,9 @@ def fitness(deck, gamestate):
 
 	if deck["esg"]:
 		threads.append(threading.Thread(target=esg,args=(deck,gamestate,inter)))
+
+	if deck["signblood"] and gamestate["b"] >= 2 and (gamestate["health"] >= 3 or gamestate["life"] <= 2):
+		threads.append(threading.Thread(target=signblood,args=(deck,gamestate,inter)))
 
 	for i in threads:
 		i.start()
