@@ -1,6 +1,6 @@
 import random
 import threading
-vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond", "esg", "volc", "badlands", "usea"]
+vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond", "esg", "volc", "badlands", "usea", "signblood"]
 def generateDeck():
 	ret = {}
 	for i in vals:
@@ -187,6 +187,30 @@ def probe(deck,gamestate,inter):
 	tmpGamestate["grave"] += 1
 	tmpGamestate["health"] -= 2
 	inter["probe"] = fitness(tmpDeck,tmpGamestate)
+
+def signblood(deck,gamestate,inter):
+	tmpDeck = dict(deck)
+	tmpGamestate = dict(gamestate)
+	tmpDeck["signblood"] -= 1
+	tmpGamestate["storm"] += 1
+	tmpGamestate["grave"] += 1
+	if tmpGamestate["life"] <= 2:
+		tmpGamestate["life"] -= 2
+		tmpGamestate["hand"] -= 1
+	else:
+		tmpGamestate["health"] -= 2
+		tmpGamestate["hand"] += 1
+	tmpGamestate["b"] -= 2
+	tmpGamestate["mana"] -= 2
+	if tmpGamestate["u"] > tmpGamestate["mana"]:
+		tmpGamestate["u"] = tmpGamestate["mana"]
+	if tmpGamestate["b"] > tmpGamestate["mana"]:
+		tmpGamestate["b"] = tmpGamestate["mana"]
+	if tmpGamestate["r"] > tmpGamestate["mana"]:
+		tmpGamestate["r"] = tmpGamestate["mana"]
+	if tmpGamestate["g"] > tmpGamestate["mana"]:
+		tmpGamestate["g"] = tmpGamestate["mana"]
+	inter["signblood"] = fitness(tmpDeck,tmpGamestate)
 
 def visionsbeyond(deck,gamestate,inter):
 	tmpDeck = dict(deck)
