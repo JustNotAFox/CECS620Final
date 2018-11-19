@@ -13,6 +13,7 @@ def worker():
 		popedit.put(1)
 		if len(pop) < popsize:
 			pop.append((deck,fit))
+			print(str(len(pop)))
 		else:
 			if pop[popsize-1][1]:
 				pop[invertedWeightedPopRandom()] = (deck,fit)
@@ -38,18 +39,19 @@ def weightedPopRandom():
 	return pop[i]
 
 def invertedWeightedPopRandom():
-	print("stuck in here?")
 	tmp = []
 	for i in range(0,popsize):
 		tmp.append(1/pop[i][1])
+		tmp[i] *= tmp[i]
 	c = sum(tmp)
 	t = random.random() * c
 	i = popsize - 1
+	c -= tmp[i]
 	while c > 0:
 		i -= 1
 		if not i:
 			i = popsize - 1
-		c -= pop[i][1]
+		c -= tmp[i]
 	return i
 	
 def breed(mom,dad):
@@ -88,18 +90,15 @@ for x in range(0,20):
 	deck = fitness.generateDeck()
 	tocalc.put(deck)
 tocalc.join()
-print("Max:",pop[0])
-print("Min:",pop[popsize-1])
-print("Avg weight:",sum(i[1] for i in pop)/popsize)
+output = open("GA_stats.csv", "w")
+output.write(str(pop[0][1])+","+str(pop[popsize-1][1])+","+str(sum(i[1] for i in pop)/popsize)+"\n")
 for x in range(1,101):
+	print("Population",x)
 	deck = breed(weightedPopRandom()[0],weightedPopRandom()[0])
 	tocalc.put(deck)
 	deck = mutate(random.choice(pop)[0])
 	tocalc.put(deck)
 	tocalc.join()
-	print("After generation",x)
-	print("Max:",pop[0])
-	print("Min:",pop[popsize-1])
-	print("Avg weight:",sum(i[1] for i in pop)/popsize)
-	
+	output.write(str(pop[0][1])+","+str(pop[popsize-1][1])+","+str(sum(i[1] for i in pop)/popsize)+"\n")
+output.close()
 input()
