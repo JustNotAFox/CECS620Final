@@ -6,9 +6,9 @@ def generateDeck():
 	for i in vals:
 		ret[i] = 0
 	c = 0
-	while c < 30:
+	while c < decksize:
 		t = random.choice(vals)
-		if ret[t] < 4:
+		if ret[t] < cardmax:
 			ret[t] += 1
 			c += 1
 	return ret
@@ -21,7 +21,7 @@ def initGamestate():
 	ret["g"] = 0
 	ret["mana"] = 0
 	ret["storm"] = 0
-	ret["life"] = 20
+	ret["life"] = 10
 	ret["health"] = 20
 	ret["hand"] = 7
 	ret["land"] = 1
@@ -342,61 +342,77 @@ def fitness(deck, gamestate):
 		return 0
 
 	if deck["badlands"] and gamestate["land"]:
-		threads.append(threading.Thread(target=badlands,args=(deck,gamestate,inter)))
+		badlands(deck,gamestate,inter)
 
 	if deck["usea"] and gamestate["land"]:
-		threads.append(threading.Thread(target=usea,args=(deck,gamestate,inter)))
+		usea(deck,gamestate,inter)
 
 	if deck["volc"] and gamestate["land"]:
-		threads.append(threading.Thread(target=volc,args=(deck,gamestate,inter)))
+		volc(deck,gamestate,inter)
 
 	if deck["lotus"]:
-		threads.append(threading.Thread(target=lotus,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=lotus,args=(deck,gamestate,inter)))
+		lotus(deck,gamestate,inter)
 
 	if deck["tendrils"] and gamestate["b"] >= 2 and gamestate["mana"] >= 4:
-		threads.append(threading.Thread(target=tendrils,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=tendrils,args=(deck,gamestate,inter)))
+		tendrils(deck,gamestate,inter)
 
 	if deck["darkrit"] and gamestate["b"]:
-		threads.append(threading.Thread(target=darkrit,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=darkrit,args=(deck,gamestate,inter)))
+		darkrit(deck,gamestate,inter)
 
 	if deck["riteflame"] and gamestate["r"]:
-		threads.append(threading.Thread(target=riteflame,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=riteflame,args=(deck,gamestate,inter)))
+		riteflame(deck,gamestate,inter)
 
 	if deck["morph"] and (gamestate["r"] or gamestate["g"]) and gamestate["mana"] >= 2:
-		threads.append(threading.Thread(target=morph,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=morph,args=(deck,gamestate,inter)))
+		morph(deck,gamestate,inter)
 
 	if deck["wildcantor"] and (gamestate["r"] or gamestate["g"]):
-		threads.append(threading.Thread(target=wildcantor,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=wildcantor,args=(deck,gamestate,inter)))
+		wildcantor(deck,gamestate,inter)
+
 
 	if deck["star"] and gamestate["mana"] >= 2:
-		threads.append(threading.Thread(target=star,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=star,args=(deck,gamestate,inter)))
+		star(deck,gamestate,inter)
 
 	if deck["sphere"] and gamestate["mana"] >= 2:
-		threads.append(threading.Thread(target=sphere,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=sphere,args=(deck,gamestate,inter)))
+		sphere(deck,gamestate,inter)
 
 	if deck["probe"] and gamestate["health"] >= 3:
-		threads.append(threading.Thread(target=probe,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=probe,args=(deck,gamestate,inter)))
+		probe(deck,gamestate,inter)
 
 	if deck["visionsbeyond"] and gamestate["u"]:
-		threads.append(threading.Thread(target=visionsbeyond,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=visionsbeyond,args=(deck,gamestate,inter)))
+		visionsbeyond(deck,gamestate,inter)
 
 	if deck["nightwhisper"] and gamestate["b"] and gamestate["mana"] >= 2 and gamestate["health"] >= 3:
-		threads.append(threading.Thread(target=nightwhisper,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=nightwhisper,args=(deck,gamestate,inter)))
+		nightwhisper(deck,gamestate,inter)
 
 	if deck["wraith"] and gamestate["health"] >= 3:
-		threads.append(threading.Thread(target=wraith,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=wraith,args=(deck,gamestate,inter)))
+		wraith(deck,gamestate,inter)
 
 	if deck["spiritguide"]:
-		threads.append(threading.Thread(target=spiritguide,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=spiritguide,args=(deck,gamestate,inter)))
+		spiritguide(deck,gamestate,inter)
 
 	if deck["cabalrit"] and gamestate["b"] and gamestate["mana"] >= 2:
-		threads.append(threading.Thread(target=cabalrit,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=cabalrit,args=(deck,gamestate,inter)))
+		cabalrit(deck,gamestate,inter)
 
 	if deck["esg"]:
-		threads.append(threading.Thread(target=esg,args=(deck,gamestate,inter)))
+		#threads.append(threading.Thread(target=esg,args=(deck,gamestate,inter)))
+		esg(deck,gamestate,inter)
 
 	if deck["signblood"] and gamestate["b"] >= 2 and (gamestate["health"] >= 3 or gamestate["life"] <= 2):
-		threads.append(threading.Thread(target=signblood,args=(deck,gamestate,inter)))
+		signblood(deck,gamestate,inter)
 
 	for i in threads:
 		i.start()
