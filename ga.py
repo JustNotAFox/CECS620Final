@@ -34,7 +34,7 @@ def breed(mom,dad):
 			ret[t] += 1
 			c += 1
 	return ret
-	
+
 for x in range(0,20):
 	deck = fitness.generateDeck()
 	tocalc.put(deck)
