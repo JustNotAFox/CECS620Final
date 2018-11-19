@@ -1,6 +1,8 @@
 import random
 import threading
 vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond", "esg", "volc", "badlands", "usea", "signblood"]
+decksize = 10
+cardmax = 2
 def generateDeck():
 	ret = {}
 	for i in vals:
