@@ -5,10 +5,10 @@ def generateDeck():
 	for i in vals:
 		ret[i] = 0
 	c = 0
-	while c < 15:
+	while c < 20:
 		t = random.choice(vals)
-		if ret[random.choice(vals)] < 4:
-			ret[random.choice(vals)] += 1
+		if ret[t] < 4:
+			ret[t] += 1
 			c += 1
 	return ret
 
@@ -65,7 +65,6 @@ def fitness(deck, gamestate):
 			if tmpGamestate["r"] > tmpGamestate["mana"]:
 				tmpGamestate["r"] = tmpGamestate["mana"]
 			tmpGamestate["grave"] += 1
-			tmpGamestate["health"] += 2
 			inter["tendrils"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["darkrit"] and gamestate["b"]:
@@ -129,7 +128,6 @@ def fitness(deck, gamestate):
 			tmpGamestate["u"] = tmpGamestate["mana"]
 		if tmpGamestate["b"] > tmpGamestate["mana"]:
 			tmpGamestate["b"] = tmpGamestate["mana"]
-		# print("Starting wild cantor" + str(tmpGamestate["hand"]))
 		inter["wildcantor"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["star"] and gamestate["mana"] >= 2:
@@ -140,8 +138,8 @@ def fitness(deck, gamestate):
 		tmpGamestate["r"] += 1
 		tmpGamestate["b"] += 1
 		tmpGamestate["u"] += 1
-		tmpGamestate["grave"] += 1
 		tmpGamestate["mana"] -= 1
+		tmpGamestate["grave"] += 1
 		if tmpGamestate["u"] > tmpGamestate["mana"]:
 			tmpGamestate["u"] = tmpGamestate["mana"]
 		if tmpGamestate["b"] > tmpGamestate["mana"]:
@@ -150,25 +148,25 @@ def fitness(deck, gamestate):
 			tmpGamestate["r"] = tmpGamestate["mana"]
 		inter["star"] = fitness(tmpDeck,tmpGamestate)
 
-		if deck["sphere"] and gamestate["mana"] >= 2:
-			tmpDeck = dict(deck)
-			tmpGamestate = dict(gamestate)
-			tmpDeck["sphere"] -= 1
-			tmpGamestate["storm"] += 1
-			tmpGamestate["r"] += 1
-			tmpGamestate["b"] += 1
-			tmpGamestate["u"] += 1
-			tmpGamestate["grave"] += 1
-			tmpGamestate["mana"] -= 1
-			if tmpGamestate["u"] > tmpGamestate["mana"]:
-				tmpGamestate["u"] = tmpGamestate["mana"]
-			if tmpGamestate["b"] > tmpGamestate["mana"]:
-				tmpGamestate["b"] = tmpGamestate["mana"]
-			if tmpGamestate["r"] > tmpGamestate["mana"]:
-				tmpGamestate["r"] = tmpGamestate["mana"]
-			inter["sphere"] = fitness(tmpDeck,tmpGamestate)
+	if deck["sphere"] and gamestate["mana"] >= 2:
+		tmpDeck = dict(deck)
+		tmpGamestate = dict(gamestate)
+		tmpDeck["sphere"] -= 1
+		tmpGamestate["storm"] += 1
+		tmpGamestate["r"] += 1
+		tmpGamestate["b"] += 1
+		tmpGamestate["u"] += 1
+		tmpGamestate["mana"] -= 1
+		tmpGamestate["grave"] += 1
+		if tmpGamestate["u"] > tmpGamestate["mana"]:
+			tmpGamestate["u"] = tmpGamestate["mana"]
+		if tmpGamestate["b"] > tmpGamestate["mana"]:
+			tmpGamestate["b"] = tmpGamestate["mana"]
+		if tmpGamestate["r"] > tmpGamestate["mana"]:
+			tmpGamestate["r"] = tmpGamestate["mana"]
+		inter["sphere"] = fitness(tmpDeck,tmpGamestate)
 
-	if deck["probe"] and tmpGamestate["health"] >= 3:
+	if deck["probe"] and gamestate["health"] >= 3:
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["probe"] -= 1
@@ -177,7 +175,7 @@ def fitness(deck, gamestate):
 		tmpGamestate["health"] -= 2
 		inter["probe"] = fitness(tmpDeck,tmpGamestate)
 
-	if deck["visionsbeyond"] and tmpGamestate["u"]:
+	if deck["visionsbeyond"] and gamestate["u"]:
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["visionsbeyond"] -= 1
@@ -185,11 +183,11 @@ def fitness(deck, gamestate):
 		if tmpGamestate["grave"] >= 20:
 			tmpGamestate["hand"] += 2
 		tmpGamestate["grave"] += 1
-		tmpGamestate["u"] -= 2
-		tmpGamestate["mana"] -= 2
+		tmpGamestate["u"] -= 1
+		tmpGamestate["mana"] -= 1
 		inter["visionsbeyond"] = fitness(tmpDeck,tmpGamestate)
 
-	if deck["nightwhisper"] and gamestate["b"] and gamestate["mana"] >= 2 and tmpGamestate["health"] >= 3:
+	if deck["nightwhisper"] and gamestate["b"] and gamestate["mana"] >= 2 and gamestate["health"] >= 3:
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["nightwhisper"] -= 1
@@ -201,7 +199,7 @@ def fitness(deck, gamestate):
 		tmpGamestate["mana"] -= 2
 		inter["nightwhisper"] = fitness(tmpDeck,tmpGamestate)
 
-	if deck["wraith"] and tmpGamestate["health"] >= 3:
+	if deck["wraith"] and gamestate["health"] >= 3:
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["wraith"] -= 1
@@ -213,6 +211,7 @@ def fitness(deck, gamestate):
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["spiritguide"] -= 1
+		tmpGamestate["hand"] -= 1
 		tmpGamestate["r"] += 1
 		tmpGamestate["mana"] += 1
 		if tmpGamestate["r"] > tmpGamestate["mana"]:
