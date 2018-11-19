@@ -1,4 +1,4 @@
-import fitness2
+import fitness
 pop = []
 for x in range(0,20):
 	deck = fitness2.generateDeck()
