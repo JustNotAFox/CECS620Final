@@ -1,6 +1,6 @@
 import random
 import threading
-vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond", "esg"]
+vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond", "esg", "volc", "badlands", "usea"]
 def generateDeck():
 	ret = {}
 	for i in vals:
@@ -276,6 +276,36 @@ def cabalrit(deck,gamestate,inter):
 	tmpGamestate["grave"] += 1
 	tmpGamestate["hand"] -= 1
 	inter["cabalrit"] = fitness(tmpDeck,tmpGamestate)
+
+def volc(deck,gamestate,inter):
+	tmpDeck = dict(deck)
+	tmpGamestate = dict(gamestate)
+	tmpDeck["volc"] -= 1
+	tmpGamestate["hand"] -= 1
+	tmpGamestate["r"] += 1
+	tmpGamestate["u"] += 1
+	tmpGamestate["mana"] += 1
+	inter["volc"] = fitness(tmpDeck,tmpGamestate)
+
+def badlands(deck,gamestate,inter):
+	tmpDeck = dict(deck)
+	tmpGamestate = dict(gamestate)
+	tmpDeck["badlands"] -= 1
+	tmpGamestate["hand"] -= 1
+	tmpGamestate["r"] += 1
+	tmpGamestate["b"] += 1
+	tmpGamestate["mana"] += 1
+	inter["badlands"] = fitness(tmpDeck,tmpGamestate)
+
+def usea(deck,gamestate,inter):
+	tmpDeck = dict(deck)
+	tmpGamestate = dict(gamestate)
+	tmpDeck["usea"] -= 1
+	tmpGamestate["hand"] -= 1
+	tmpGamestate["b"] += 1
+	tmpGamestate["u"] += 1
+	tmpGamestate["mana"] += 1
+	inter["usea"] = fitness(tmpDeck,tmpGamestate)
 
 def fitness(deck, gamestate):
 	threads = []
