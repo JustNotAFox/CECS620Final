@@ -1,5 +1,5 @@
 import random
-vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide"]
+vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond"]
 def generateDeck():
 	ret = {}
 	for i in vals:
@@ -44,7 +44,7 @@ def fitness(deck, gamestate):
 		tmpGamestate["b"] += 1
 		tmpGamestate["r"] += 1
 		tmpGamestate["grave"] += 1
-		print("Starting lotus" + str(tmpGamestate["hand"]))
+		# print("Starting lotus" + str(tmpGamestate["hand"]))
 		inter["lotus"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["tendrils"] and gamestate["b"] >= 2 and gamestate["mana"] >= 4:
@@ -67,7 +67,7 @@ def fitness(deck, gamestate):
 				tmpGamestate["r"] = tmpGamestate["mana"]
 			tmpGamestate["grave"] += 1
 			tmpGamestate["health"] += 2
-			print("Starting tendrils" + str(tmpGamestate["hand"]))
+			# print("Starting tendrils" + str(tmpGamestate["hand"]))
 			inter["tendrils"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["darkrit"] and gamestate["b"]:
@@ -83,7 +83,7 @@ def fitness(deck, gamestate):
 			tmpGamestate["u"] = tmpGamestate["mana"] - 3
 		if tmpGamestate["r"] > tmpGamestate["mana"] - 3:
 			tmpGamestate["r"] = tmpGamestate["mana"] - 3
-		print("Starting dark ritual" + str(tmpGamestate["hand"]))
+		# print("Starting dark ritual" + str(tmpGamestate["hand"]))
 		inter["darkrit"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["riteflame"] and gamestate["r"]:
@@ -100,7 +100,7 @@ def fitness(deck, gamestate):
 			tmpGamestate["u"] = tmpGamestate["mana"] - (1 + tmpGamestate["riteflame"])
 		if tmpGamestate["b"] > tmpGamestate["mana"] - (1 + tmpGamestate["riteflame"]):
 			tmpGamestate["b"] = tmpGamestate["mana"] - (1 + tmpGamestate["riteflame"])
-		print("Starting rite of flame" + str(tmpGamestate["hand"]))
+		# print("Starting rite of flame" + str(tmpGamestate["hand"]))
 		inter["riteflame"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["morph"] and gamestate["r"] and gamestate["mana"] >= 2:
@@ -118,7 +118,7 @@ def fitness(deck, gamestate):
 			tmpGamestate["b"] = tmpGamestate["mana"]
 		if tmpGamestate["r"] > tmpGamestate["mana"]:
 			tmpGamestate["r"] = tmpGamestate["mana"]
-		print("Starting manamorphose" + str(tmpGamestate["hand"]))
+		# print("Starting manamorphose" + str(tmpGamestate["hand"]))
 		inter["morph"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["wildcantor"] and gamestate["r"]:
@@ -134,7 +134,7 @@ def fitness(deck, gamestate):
 			tmpGamestate["u"] = tmpGamestate["mana"]
 		if tmpGamestate["b"] > tmpGamestate["mana"]:
 			tmpGamestate["b"] = tmpGamestate["mana"]
-		print("Starting wild cantor" + str(tmpGamestate["hand"]))
+		# print("Starting wild cantor" + str(tmpGamestate["hand"]))
 		inter["wildcantor"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["star"] and gamestate["mana"] >= 2:
@@ -146,13 +146,14 @@ def fitness(deck, gamestate):
 		tmpGamestate["b"] += 1
 		tmpGamestate["u"] += 1
 		tmpGamestate["grave"] += 1
+		tmpGamestate["mana"] -= 1
 		if tmpGamestate["u"] > tmpGamestate["mana"]:
 			tmpGamestate["u"] = tmpGamestate["mana"]
 		if tmpGamestate["b"] > tmpGamestate["mana"]:
 			tmpGamestate["b"] = tmpGamestate["mana"]
 		if tmpGamestate["r"] > tmpGamestate["mana"]:
 			tmpGamestate["r"] = tmpGamestate["mana"]
-		print("Starting chromatic star" + str(tmpGamestate["hand"]))
+		# print("Starting chromatic star" + str(tmpGamestate["hand"]))
 		inter["star"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["sphere"] and gamestate["mana"] >= 2:
@@ -164,13 +165,14 @@ def fitness(deck, gamestate):
 		tmpGamestate["b"] += 1
 		tmpGamestate["u"] += 1
 		tmpGamestate["grave"] += 1
+		tmpGamestate["mana"] -= 1
 		if tmpGamestate["u"] > tmpGamestate["mana"]:
 			tmpGamestate["u"] = tmpGamestate["mana"]
 		if tmpGamestate["b"] > tmpGamestate["mana"]:
 			tmpGamestate["b"] = tmpGamestate["mana"]
 		if tmpGamestate["r"] > tmpGamestate["mana"]:
 			tmpGamestate["r"] = tmpGamestate["mana"]
-		print("Starting chromatic sphere" + str(tmpGamestate["hand"]))
+		# print("Starting chromatic sphere" + str(tmpGamestate["hand"]))
 		inter["sphere"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["probe"] and tmpGamestate["health"] >= 3:
@@ -180,8 +182,21 @@ def fitness(deck, gamestate):
 		tmpGamestate["storm"] += 1
 		tmpGamestate["grave"] += 1
 		tmpGamestate["health"] -= 2
-		print("Starting gitaxian probe" + str(tmpGamestate["hand"]))
+		# print("Starting gitaxian probe" + str(tmpGamestate["hand"]))
 		inter["probe"] = fitness(tmpDeck,tmpGamestate)
+
+	if deck["visionsbeyond"] and tmpGamestate["u"]:
+		tmpDeck = dict(deck)
+		tmpGamestate = dict(gamestate)
+		tmpDeck["visionsbeyond"] -= 1
+		tmpGamestate["storm"] += 1
+		if tmpGamestate["grave"] >= 20:
+			tmpGamestate["hand"] += 2
+		tmpGamestate["grave"] += 1
+		tmpGamestate["u"] -= 2
+		tmpGamestate["mana"] -= 2
+		# print("Starting gitaxian probe" + str(tmpGamestate["hand"]))
+		inter["visionsbeyond"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["nightwhisper"] and gamestate["b"] and gamestate["mana"] >= 2 and tmpGamestate["health"] >= 3:
 		tmpDeck = dict(deck)
@@ -191,7 +206,9 @@ def fitness(deck, gamestate):
 		tmpGamestate["grave"] += 1
 		tmpGamestate["hand"] += 1
 		tmpGamestate["health"] -= 2
-		print("Starting night's whisper" + str(tmpGamestate["hand"]))
+		tmpGamestate["b"] -= 1
+		tmpGamestate["mana"] -= 2
+		# print("Starting night's whisper" + str(tmpGamestate["hand"]))
 		inter["nightwhisper"] = fitness(tmpDeck,tmpGamestate)
 
 	if deck["wraith"] and tmpGamestate["health"] >= 3:
