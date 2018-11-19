@@ -5,7 +5,7 @@ def generateDeck():
 	for i in vals:
 		ret[i] = 0
 	c = 0
-	while c < 40:
+	while c < 20:
 		t = random.choice(vals)
 		if ret[t] < 4:
 			ret[t] += 1
@@ -211,6 +211,7 @@ def fitness(deck, gamestate):
 		tmpDeck = dict(deck)
 		tmpGamestate = dict(gamestate)
 		tmpDeck["spiritguide"] -= 1
+		tmpGamestate["hand"] -= 1
 		tmpGamestate["r"] += 1
 		tmpGamestate["mana"] += 1
 		if tmpGamestate["r"] > tmpGamestate["mana"]:
