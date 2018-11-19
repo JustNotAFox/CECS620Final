@@ -1,8 +1,8 @@
 import random
 import threading
-vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond", "esg", "volc", "badlands", "usea", "signblood"]
+vals = ["tendrils", "darkrit", "lotus", "morph", "probe", "wraith", "cabalrit", "nightwhisper", "riteflame", "star", "sphere", "wildcantor", "spiritguide", "visionsbeyond", "esg", "volc", "badlands", "usea", "signblood", "desprit", "pyrerit", "grape"]
 decksize = 10
-cardmax = 2
+cardmax = 1
 def generateDeck():
 	ret = {}
 	for i in vals:
@@ -336,6 +336,67 @@ def usea(deck,gamestate,inter):
 	tmpGamestate["land"] -= 1
 	inter["usea"] = fitness(tmpDeck,tmpGamestate)
 
+def desprit(deck,gamestate,inter):
+	tmpDeck = dict(deck)
+	tmpGamestate = dict(gamestate)
+	tmpDeck["desprit"] -= 1
+	tmpGamestate["hand"] -= 1
+	tmpGamestate["storm"] += 1
+	tmpGamestate["r"] += 2
+	tmpGamestate["mana"] += 1
+	tmpGamestate["grave"] += 1
+	if tmpGamestate["r"] > tmpGamestate["mana"]:
+		tmpGamestate["r"] = tmpGamestate["mana"]
+	if tmpGamestate["b"] > tmpGamestate["mana"] - 3:
+		tmpGamestate["b"] = tmpGamestate["mana"] - 3
+	if tmpGamestate["u"] > tmpGamestate["mana"] - 3:
+		tmpGamestate["u"] = tmpGamestate["mana"] - 3
+	if tmpGamestate["g"] > tmpGamestate["mana"] - 3:
+		tmpGamestate["g"] = tmpGamestate["mana"] - 3
+	inter["desprit"] = fitness(tmpDeck,tmpGamestate)
+	
+def pyrerit(deck,gamestate,inter):
+	tmpDeck = dict(deck)
+	tmpGamestate = dict(gamestate)
+	tmpDeck["pyrerit"] -= 1
+	tmpGamestate["hand"] -= 1
+	tmpGamestate["storm"] += 1
+	tmpGamestate["r"] += 2
+	tmpGamestate["mana"] += 1
+	tmpGamestate["grave"] += 1
+	if tmpGamestate["r"] > tmpGamestate["mana"]:
+		tmpGamestate["r"] = tmpGamestate["mana"]
+	if tmpGamestate["b"] > tmpGamestate["mana"] - 3:
+		tmpGamestate["b"] = tmpGamestate["mana"] - 3
+	if tmpGamestate["u"] > tmpGamestate["mana"] - 3:
+		tmpGamestate["u"] = tmpGamestate["mana"] - 3
+	if tmpGamestate["g"] > tmpGamestate["mana"] - 3:
+		tmpGamestate["g"] = tmpGamestate["mana"] - 3
+	inter["pyrerit"] = fitness(tmpDeck,tmpGamestate)
+
+def grape(deck,gamestate,inter):
+	tmpGamestate = dict(gamestate)
+	tmpGamestate["storm"] += 1
+	tmpGamestate["life"] -= tmpGamestate["storm"]
+	if(tmpGamestate["life"] > 0):
+		tmpDeck = dict(deck)
+		tmpDeck["grape"] -= 1
+		tmpGamestate["r"] -= 1
+		tmpGamestate["mana"] -= 2
+		if tmpGamestate["r"] > tmpGamestate["mana"]:
+			tmpGamestate["r"] = tmpGamestate["mana"]
+		if tmpGamestate["u"] > tmpGamestate["mana"]:
+			tmpGamestate["u"] = tmpGamestate["mana"]
+		if tmpGamestate["b"] > tmpGamestate["mana"]:
+			tmpGamestate["b"] = tmpGamestate["mana"]
+		if tmpGamestate["g"] > tmpGamestate["mana"]:
+			tmpGamestate["g"] = tmpGamestate["mana"]
+		tmpGamestate["hand"] -= 1
+		tmpGamestate["grave"] += 1
+		inter["grape"] = fitness(tmpDeck,tmpGamestate)
+	else:
+		inter["grape"] = 1
+	
 def fitness(deck, gamestate):
 	threads = []
 	inter = {}
@@ -412,6 +473,18 @@ def fitness(deck, gamestate):
 	if deck["esg"]:
 		#threads.append(threading.Thread(target=esg,args=(deck,gamestate,inter)))
 		esg(deck,gamestate,inter)
+		
+	if deck["desprit"] and gamestate["r"] and gamestate["mana"] >= 2:
+		#threads.append(threading.Thread(target=desprit,args=(deck,gamestate,inter)))
+		desprit(deck,gamestate,inter)
+		
+	if deck["pyrerit"] and gamestate["r"] and gamestate["mana"] >= 2:
+		#threads.append(threading.Thread(target=pyrerit,args=(deck,gamestate,inter)))
+		pyrerit(deck,gamestate,inter)
+		
+	if deck["grape"] and gamestate["r"] and gamestate["mana"] >= 2:
+		#threads.append(threading.Thread(target=grape,args=(deck,gamestate,inter)))
+		grape(deck,gamestate,inter)
 
 	if deck["signblood"] and gamestate["b"] >= 2 and (gamestate["health"] >= 3 or gamestate["life"] <= 2):
 		signblood(deck,gamestate,inter)

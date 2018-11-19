@@ -91,6 +91,9 @@ for x in range(0,20):
 	tocalc.put(deck)
 tocalc.join()
 output = open("GA_stats.csv", "w")
+output.write("Initial population:,"+",".join(fitness.vals)+"\n")
+for i in pop:
+	output.write(","+",".join(str(t) for t in i[0].values())+"\n")
 output.write(str(pop[0][1])+","+str(pop[popsize-1][1])+","+str(sum(i[1] for i in pop)/popsize)+"\n")
 for x in range(1,101):
 	print("Population",x)
@@ -100,5 +103,8 @@ for x in range(1,101):
 	tocalc.put(deck)
 	tocalc.join()
 	output.write(str(pop[0][1])+","+str(pop[popsize-1][1])+","+str(sum(i[1] for i in pop)/popsize)+"\n")
+output.write("Final population:,"+",".join(fitness.vals)+"\n")
+for i in pop:
+	output.write(","+",".join(str(t) for t in i[0].values())+"\n")
 output.close()
 input()
